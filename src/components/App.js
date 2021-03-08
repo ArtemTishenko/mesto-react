@@ -5,14 +5,28 @@ import Main from '../components/Main'
 import Footer from '../components/Footer';
 import PopupWithForm from '../components/PopupWithForm';
 import ImagePopup from '../components/ImagePopup';
-import React from 'react';
+import React, { useEffect } from 'react';
+import api from '../utils/api'
 
 function App() {
   const[isEditAvatarPopupOpen, setIsEditAvatarPopupOpen]  = React.useState(false);
   const[isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
   const[isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
  
+  const[userName, setUserName]= React.useState('');
+  const[userDescription, setUserDescription] = React.useState('');
+  const[userAvatar, setUserAvatar] = React.useState('');
 
+  useEffect(()=>{
+    api.getInfoProfile()
+        .then((data)=>{
+          const dataAvatar = data.avatar
+          console.log(dataAvatar,'####dataAvatar')
+          setUserAvatar(dataAvatar) ;
+          console.log(userAvatar, '###userAvatar') 
+        })
+      
+  },[])
 
   function handleEditAvatarClick(){
     setIsEditAvatarPopupOpen(true);
