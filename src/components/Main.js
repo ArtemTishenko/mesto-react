@@ -1,14 +1,5 @@
 function Main (props){
   
-  // function handleEditAvatarClick(){
-  //   document.querySelector('.popup_type_avatar').classList.add('popup_visible')  
-  // }
-  // function handleEditProfileClick(){
-  //   document.querySelector('.popup_type_edit-form').classList.add('popup_visible')
-  // }
-  // function handleAddPlaceClick(){
-  //   document.querySelector('.popup_type_card').classList.add('popup_visible')
-  // }
   return(
     <main className="main"> 
     <section className="profile">
