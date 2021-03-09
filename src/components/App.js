@@ -7,6 +7,7 @@ import PopupWithForm from '../components/PopupWithForm';
 import ImagePopup from '../components/ImagePopup';
 import React, { useEffect } from 'react';
 import api from '../utils/api'
+import Card from '../components/Card';
 
 function App() {
   const[isEditAvatarPopupOpen, setIsEditAvatarPopupOpen]  = React.useState(false);
@@ -17,15 +18,26 @@ function App() {
   const[userDescription, setUserDescription] = React.useState('');
   const[userAvatar, setUserAvatar] = React.useState('');
 
+  const [cards, setCards] = React.useState([]);
+
   useEffect(()=>{
     api.getInfoProfile()
-        .then((data)=>{
-          const dataAvatar = data.avatar
-          console.log(dataAvatar,'####dataAvatar')
-          setUserAvatar(dataAvatar) ;
-          console.log(userAvatar, '###userAvatar') 
-        })
-      
+      .then((dataUser)=>{ 
+        console.log("###data", dataUser )
+        setUserName(dataUser.name);
+        setUserDescription(dataUser.about);
+        setUserAvatar(dataUser.avatar);
+      })
+      //  console.log("#userName", userName) //? Почему здесь не выводятся данные?
+  },[])
+
+  useEffect(()=>{
+    api.getAllInitialCards()
+      .then((dataCards)=>{
+        setCards(dataCards)
+        console.log("###dataCards", dataCards)
+      })
+
   },[])
 
   function handleEditAvatarClick(){
@@ -46,9 +58,26 @@ function App() {
     <div className="root">
       <div className="container">
         <Header />
-        <Main  onEditAvatar={handleEditAvatarClick}
-               onEditProfile={handleEditProfileClick} 
-               onAddPlace={handleAddPlaceClick}/>
+        <Main  onEditAvatar = {handleEditAvatarClick}
+               onEditProfile = {handleEditProfileClick} 
+               onAddPlace = {handleAddPlaceClick}
+               name = {userName}
+               description = {userDescription}
+               avatar={userAvatar}/>
+        <div className="elements">
+          {
+            //console.log("###myCards",cards)
+            cards.map(card=>{
+              return (
+              <Card key = {card._id}
+                    cardImg = {card.link}
+                    cardAlt = {card.name}
+                    cardCaption = {card.name}
+                    cardLikesCounter = {card.likes.length}
+              />)
+            })
+          }
+        </div>       
         <Footer />
       </div> 
       <PopupWithForm name="avatar" 
@@ -72,22 +101,8 @@ function App() {
         <input className="popup__field popup__field_type_card-link" id="popup__field-card-link" type="url" placeholder="Ссылка на картинку" aria-label="Ссылка на картинку" name="link" required noValidate autoComplete="on"/>
       </PopupWithForm>
       <PopupWithForm name="card-delete" title="Вы уверены?" />
-
       <ImagePopup />
 
-      {/* <template className="template">
-        <div className="element">
-          <img className="element__img" src=" #" alt =" #"/>
-          <button type="button" className="element__delete button"></button>
-          <div className="element__name">
-            <h2 className="element__caption"></h2>
-            <div className=" element__like-counter">
-              <button className="element__like button"></button>
-              <div className="element__counter">0</div>
-            </div>
-          </div>
-        </div>
-      </template>   */}
     </div>
   );
 }

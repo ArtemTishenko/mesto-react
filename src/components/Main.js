@@ -5,16 +5,18 @@ function Main (props){
     <section className="profile">
       <button type="button" 
               className="profile__avatar-img button" 
-              onClick={props.onEditAvatar}> </button>
+              onClick={props.onEditAvatar}
+              style={{backgroundImage: `url(${props.avatar})`}}> 
+      </button>
       <div className="profile__info">
         <div className="profile__info-name-eddit">
-          <h1 className="profile__info-name"> Жак Ив-Кусто</h1>
+          <h1 className="profile__info-name">{props.name}</h1>
           <button type="button" 
                   className="profile__button-info-eddit button" 
                   aria-label="Редктировать профиль"
                   onClick={props.onEditProfile}></button>
         </div>
-        <p className="profile__info-job">Исследователь</p>
+        <p className="profile__info-job">{props.description}</p>
       </div>
       <button type="button" 
               className="profile__button-add button" 
