@@ -1,13 +1,22 @@
-function ImagePopup(){
-  return(
+function ImagePopup(props) {
+  return (
     <div className="popup popup_type_img">
-    <div className="popup__container popup__container-img" name="popup-picture">
-      <button type="button" className="popup__button-close popup__button-close_type_img button" aria-label="Закрыть" id="popup__button-close_img"></button>
-      <img className="popup__picture" src=" #" alt =" #"/>
-      <p className="popup__picture-caption"></p>
+      <div
+        className="popup__container popup__container-img"
+        name="popup-picture"
+      >
+        <button
+          type="button"
+          className="popup__button-close popup__button-close_type_img button"
+          aria-label="Закрыть"
+          id="popup__button-close_img"
+          onClick={props.onClose}
+        ></button>
+        <img className="popup__picture" src=" #" alt=" #" />
+        <p className="popup__picture-caption"></p>
+      </div>
     </div>
-  </div> 
-  )
+  );
 }
 
-export default ImagePopup
+export default ImagePopup;

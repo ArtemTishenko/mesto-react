@@ -10,12 +10,8 @@ import api from "../utils/api";
 import Card from "../components/Card";
 
 function App() {
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(
-    false
-  );
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(
-    false
-  );
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
 
   const [userName, setUserName] = React.useState("");
@@ -23,7 +19,7 @@ function App() {
   const [userAvatar, setUserAvatar] = React.useState("");
 
   const [cards, setCards] = React.useState([]);
-
+  const [selectedCard, setSelectedCard] = React.useState(false);
   useEffect(() => {
     api.getInfoProfile().then((dataUser) => {
       console.log("###data", dataUser);
@@ -50,11 +46,16 @@ function App() {
   function handleAddPlaceClick() {
     setIsAddPlacePopupOpen(true);
   }
+  function handleCardClick (){
+    setSelectedCard(true);
+  }
   function closeAllPopups() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
+    setSelectedCard(false);
   }
+  
   return (
     <div className="root">
       <div className="container">
@@ -170,7 +171,9 @@ function App() {
         />
       </PopupWithForm>
       <PopupWithForm name="card-delete" title="Вы уверены?" />
-      <ImagePopup />
+      <ImagePopup card={handleCardClick}
+                  onClose={closeAllPopups}
+      />
     </div>
   );
 }
