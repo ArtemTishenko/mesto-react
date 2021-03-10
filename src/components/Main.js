@@ -27,7 +27,6 @@ function Main(props) {
           onClick={props.onAddPlace}
         ></button>
       </section>
-
       {props.children}
     </main>
   );

@@ -16,13 +16,13 @@ function App() {
 
   const [userName, setUserName] = React.useState("");
   const [userDescription, setUserDescription] = React.useState("");
-  const [userAvatar, setUserAvatar] = React.useState("");
+  const [userAvatar, setUserAvatar] = React.useState();
 
   const [cards, setCards] = React.useState([]);
-  const [selectedCard, setSelectedCard] = React.useState(false);
+  const [selectedCard, setSelectedCard] = React.useState({isOpen:false, linkCard:{},nameCard:{}});
   useEffect(() => {
     api.getInfoProfile().then((dataUser) => {
-      console.log("###data", dataUser);
+      //console.log("###data", dataUser);
       setUserName(dataUser.name);
       setUserDescription(dataUser.about);
       setUserAvatar(dataUser.avatar);
@@ -33,7 +33,7 @@ function App() {
   useEffect(() => {
     api.getAllInitialCards().then((dataCards) => {
       setCards(dataCards);
-      console.log("###dataCards", dataCards);
+      //console.log("###dataCards", dataCards);
     });
   }, []);
 
@@ -46,14 +46,16 @@ function App() {
   function handleAddPlaceClick() {
     setIsAddPlacePopupOpen(true);
   }
-  function handleCardClick (){
-    setSelectedCard(true);
+//______________________________________________
+  function handleCardClick (linkCard, nameCard){
+    setSelectedCard({isOpen:true, linkCard:{linkCard},nameCard:{nameCard}});
   }
+//______________________________________________
   function closeAllPopups() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
-    setSelectedCard(false);
+    setSelectedCard({isOpen:false, linkCard:{}, nameCard:{}});
   }
   
   return (
@@ -79,6 +81,8 @@ function App() {
                     cardAlt={card.name}
                     cardCaption={card.name}
                     cardLikesCounter={card.likes.length}
+                    onCardClick={handleCardClick}
+                    
                   />
                 );
               })
@@ -171,7 +175,7 @@ function App() {
         />
       </PopupWithForm>
       <PopupWithForm name="card-delete" title="Вы уверены?" />
-      <ImagePopup card={handleCardClick}
+      <ImagePopup card={selectedCard}
                   onClose={closeAllPopups}
       />
     </div>
