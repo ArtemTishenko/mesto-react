@@ -113,7 +113,7 @@ function App() {
           noValidate
           autoComplete="on"
         />
-        <span class="popup__field-error" id="popup__field-avatar-link-error"></span>
+        <span className="popup__field-error" id="popup__field-avatar-link-error"></span>
       </PopupWithForm>
       <PopupWithForm
         name="edit-form"
@@ -134,7 +134,7 @@ function App() {
           noValidate
           autoComplete="off"
         />
-        <span class="popup__field-error" id="popup__field-eddit-name-error"></span>
+        <span className="popup__field-error" id="popup__field-eddit-name-error"></span>
         <input
           className="popup__field popup__field_type_job"
           id="popup__field-eddit-job"
@@ -148,7 +148,7 @@ function App() {
           noValidate
           autoComplete="off"
         />
-        <span class="popup__field-error" id="popup__field-eddit-job-error"></span>
+        <span className="popup__field-error" id="popup__field-eddit-job-error"></span>
       </PopupWithForm>
       <PopupWithForm
         name="card"
@@ -169,7 +169,7 @@ function App() {
           noValidate
           autoComplete="off"
         />
-        <span class="popup__field-error" id="popup__field-card-name-error"></span>
+        <span className="popup__field-error" id="popup__field-card-name-error"></span>
         <input
           className="popup__field popup__field_type_card-link"
           id="popup__field-card-link"
@@ -181,7 +181,7 @@ function App() {
           noValidate
           autoComplete="on"
         />
-         <span class="popup__field-error" id="popup__field-card-link-error"></span>
+         <span className="popup__field-error" id="popup__field-card-link-error"></span>
       </PopupWithForm>
       <PopupWithForm name="card-delete" title="Вы уверены?" />
       <ImagePopup card={selectedCard} onClose={closeAllPopups} />
