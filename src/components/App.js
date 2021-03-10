@@ -10,8 +10,12 @@ import api from "../utils/api";
 import Card from "../components/Card";
 
 function App() {
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(
+    false
+  );
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(
+    false
+  );
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
 
   const [userName, setUserName] = React.useState("");
@@ -19,21 +23,22 @@ function App() {
   const [userAvatar, setUserAvatar] = React.useState();
 
   const [cards, setCards] = React.useState([]);
-  const [selectedCard, setSelectedCard] = React.useState({isOpen:false, linkCard:{},nameCard:{}});
+  const [selectedCard, setSelectedCard] = React.useState({
+    isOpen: false,
+    linkCard: {},
+    nameCard: {},
+  });
   useEffect(() => {
     api.getInfoProfile().then((dataUser) => {
-      //console.log("###data", dataUser);
       setUserName(dataUser.name);
       setUserDescription(dataUser.about);
       setUserAvatar(dataUser.avatar);
     });
-    //  console.log("#userName", userName) //? Почему здесь не выводятся данные?
   }, []);
 
   useEffect(() => {
     api.getAllInitialCards().then((dataCards) => {
       setCards(dataCards);
-      //console.log("###dataCards", dataCards);
     });
   }, []);
 
@@ -46,18 +51,21 @@ function App() {
   function handleAddPlaceClick() {
     setIsAddPlacePopupOpen(true);
   }
-//______________________________________________
-  function handleCardClick (linkCard, nameCard){
-    setSelectedCard({isOpen:true, linkCard:{linkCard},nameCard:{nameCard}});
+  function handleCardClick(linkCard, nameCard) {
+    setSelectedCard({
+      isOpen: true,
+      linkCard: { linkCard },
+      nameCard: { nameCard },
+    });
   }
-//______________________________________________
+
   function closeAllPopups() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
-    setSelectedCard({isOpen:false, linkCard:{}, nameCard:{}});
+    setSelectedCard({ isOpen: false, linkCard: {}, nameCard: {} });
   }
-  
+
   return (
     <div className="root">
       <div className="container">
@@ -71,22 +79,18 @@ function App() {
           avatar={userAvatar}
         >
           <section className="elements">
-            {
-              // console.log("###myCards",cards)
-              cards.map((card) => {
-                return (
-                  <Card
-                    key={card._id}
-                    cardImg={card.link}
-                    cardAlt={card.name}
-                    cardCaption={card.name}
-                    cardLikesCounter={card.likes.length}
-                    onCardClick={handleCardClick}
-                    
-                  />
-                );
-              })
-            }
+            {cards.map((card) => {
+              return (
+                <Card
+                  key={card._id}
+                  cardImg={card.link}
+                  cardAlt={card.name}
+                  cardCaption={card.name}
+                  cardLikesCounter={card.likes.length}
+                  onCardClick={handleCardClick}
+                />
+              );
+            })}
           </section>
         </Main>
 
@@ -109,6 +113,7 @@ function App() {
           noValidate
           autoComplete="on"
         />
+        <span class="popup__field-error" id="popup__field-avatar-link-error"></span>
       </PopupWithForm>
       <PopupWithForm
         name="edit-form"
@@ -129,6 +134,7 @@ function App() {
           noValidate
           autoComplete="off"
         />
+        <span class="popup__field-error" id="popup__field-eddit-name-error"></span>
         <input
           className="popup__field popup__field_type_job"
           id="popup__field-eddit-job"
@@ -142,6 +148,7 @@ function App() {
           noValidate
           autoComplete="off"
         />
+        <span class="popup__field-error" id="popup__field-eddit-job-error"></span>
       </PopupWithForm>
       <PopupWithForm
         name="card"
@@ -162,6 +169,7 @@ function App() {
           noValidate
           autoComplete="off"
         />
+        <span class="popup__field-error" id="popup__field-card-name-error"></span>
         <input
           className="popup__field popup__field_type_card-link"
           id="popup__field-card-link"
@@ -173,11 +181,10 @@ function App() {
           noValidate
           autoComplete="on"
         />
+         <span class="popup__field-error" id="popup__field-card-link-error"></span>
       </PopupWithForm>
       <PopupWithForm name="card-delete" title="Вы уверены?" />
-      <ImagePopup card={selectedCard}
-                  onClose={closeAllPopups}
-      />
+      <ImagePopup card={selectedCard} onClose={closeAllPopups} />
     </div>
   );
 }
