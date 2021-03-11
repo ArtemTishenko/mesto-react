@@ -5,42 +5,19 @@ import Main from "../components/Main";
 import Footer from "../components/Footer";
 import PopupWithForm from "../components/PopupWithForm";
 import ImagePopup from "../components/ImagePopup";
-import React, { useEffect } from "react";
-import api from "../utils/api";
-import Card from "../components/Card";
+ import React from "react";
+
 
 function App() {
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(
-    false
-  );
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(
-    false
-  );
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
 
-  const [userName, setUserName] = React.useState("");
-  const [userDescription, setUserDescription] = React.useState("");
-  const [userAvatar, setUserAvatar] = React.useState();
-
-  const [cards, setCards] = React.useState([]);
   const [selectedCard, setSelectedCard] = React.useState({
     isOpen: false,
     linkCard: {},
     nameCard: {},
   });
-  useEffect(() => {
-    api.getInfoProfile().then((dataUser) => {
-      setUserName(dataUser.name);
-      setUserDescription(dataUser.about);
-      setUserAvatar(dataUser.avatar);
-    });
-  }, []);
-
-  useEffect(() => {
-    api.getAllInitialCards().then((dataCards) => {
-      setCards(dataCards);
-    });
-  }, []);
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
@@ -74,26 +51,8 @@ function App() {
           onEditAvatar={handleEditAvatarClick}
           onEditProfile={handleEditProfileClick}
           onAddPlace={handleAddPlaceClick}
-          name={userName}
-          description={userDescription}
-          avatar={userAvatar}
-        >
-          <section className="elements">
-            {cards.map((card) => {
-              return (
-                <Card
-                  key={card._id}
-                  cardImg={card.link}
-                  cardAlt={card.name}
-                  cardCaption={card.name}
-                  cardLikesCounter={card.likes.length}
-                  onCardClick={handleCardClick}
-                />
-              );
-            })}
-          </section>
-        </Main>
-
+          onCardClick={handleCardClick}
+        />
         <Footer />
       </div>
       <PopupWithForm
