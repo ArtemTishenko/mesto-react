@@ -5,10 +5,17 @@ import Main from "../components/Main";
 import Footer from "../components/Footer";
 import PopupWithForm from "../components/PopupWithForm";
 import ImagePopup from "../components/ImagePopup";
- import React from "react";
+import api from "../utils/api";
+import React, { useEffect } from "react";
+//import { Route } from "react-router";
+import { CurrentUserContext } from "../contexts/CurrentUserContext"; //импортировали контекст 
+
+
 
 
 function App() {
+  const [currentUser, setCurrentUser] = React.useState({});//задали текущее значение состония переменной currentUser 
+
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
@@ -18,6 +25,8 @@ function App() {
     linkCard: {},
     nameCard: {},
   });
+
+  
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
@@ -42,9 +51,22 @@ function App() {
     setIsAddPlacePopupOpen(false);
     setSelectedCard({ isOpen: false, linkCard: {}, nameCard: {} });
   }
-
+   // подняли стейт для того то бы можно было использовать в других компонентх, а не только main
+  useEffect(()=>{ // используем useEffект 
+    api.getInfoProfile()
+      .then((dataUser)=>{
+        setCurrentUser(dataUser);// записали в стейт currentUser принятое значение от сервера  
+      })
+      .catch((err)=>{
+        console.log(err, "Ошибка при загрузке карточек")
+      })
+      
+  },[]);
+  console.log('###currentUser', currentUser);
   return (
-    <div className="root">
+    <CurrentUserContext.Provider value={currentUser}>
+       {/* // <Route exact path='/'> */}
+      <div className="root">
       <div className="container">
         <Header />
         <Main
@@ -144,8 +166,14 @@ function App() {
       </PopupWithForm>
       <PopupWithForm name="card-delete" title="Вы уверены?" />
       <ImagePopup card={selectedCard} onClose={closeAllPopups} />
-    </div>
+       </div>
+      {/* // </Route> */}
+    </CurrentUserContext.Provider>
+   
+
+    
   );
+    
 }
 
 export default App;
