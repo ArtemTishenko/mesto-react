@@ -4,6 +4,7 @@ function Card({
   cardCaption,
   cardLikesCounter,
   onCardClick,
+  cardDelete,
 }) {
   function handleClick() {
     onCardClick(cardImg, cardCaption)
@@ -14,7 +15,7 @@ function Card({
            src={cardImg} 
            alt={cardAlt} 
            onClick={handleClick} />
-      <button type="button" className="element__delete button"></button>
+      <button type="button" className={'element__delete_visible'}></button>     
       <div className="element__name">
         <h2 className="element__caption">{cardCaption}</h2>
         <div className=" element__like-counter">

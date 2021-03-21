@@ -1,35 +1,44 @@
-import api from "../utils/api";
+//import api from "../utils/api";
 import Card from "../components/Card";
-import React, { useEffect } from "react";
+import React from "react";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import { CardsContext } from "../contexts/CardsContext";
+
 
 function Main(props) {
-  const [userName, setUserName] = React.useState("");
-  const [userDescription, setUserDescription] = React.useState("");
-  const [userAvatar, setUserAvatar] = React.useState();
+  const currentUser = React.useContext(CurrentUserContext) //подписали на контекст 
+  console.log("###currentUser-main-avatar", currentUser.avatar);
 
-  const [cards, setCards] = React.useState([]);
+  const cards = React.useContext(CardsContext);
+  console.log("#cards", cards)  
 
-  useEffect(() => {
-    api.getInfoProfile()
-      .then((dataUser) => {
-        setUserName(dataUser.name);
-        setUserDescription(dataUser.about);
-        setUserAvatar(dataUser.avatar);
-      })
-      .catch((err)=>{
-        console.log(err, "Ошибка при згрузке информации о профиле")
-      })
-  }, []);
 
-  useEffect(() => {
-    api.getAllInitialCards().then((dataCards) => {
-      setCards(dataCards);
-    })
-    .catch((err)=>{
-      console.log(err, "Ошибка при загрузке карточек")
-    })
+  // const [userName, setUserName] = React.useState("");
+  // const [userDescription, setUserDescription] = React.useState("");
+  // const [userAvatar, setUserAvatar] = React.useState();
+  //const [cards, setCards] = React.useState([]);
+  
+  // useEffect(() => {
+  //   api.getInfoProfile()
+  //     .then((dataUser) => {
+  //       setUserName(dataUser.name);
+  //       setUserDescription(dataUser.about);
+  //       setUserAvatar(dataUser.avatar);
+  //     })
+  //     .catch((err)=>{
+  //       console.log(err, "Ошибка при згрузке информации о профиле")
+  //     })
+  // }, []);
+
+  // useEffect(() => {
+  //   api.getAllInitialCards().then((dataCards) => {
+  //     setCards(dataCards);
+  //   })
+  //   .catch((err)=>{
+  //     console.log(err, "Ошибка при загрузке карточек")
+  //   })
     
-  }, []);
+  // }, []);
 
   return (
     <main className="main">
@@ -38,11 +47,11 @@ function Main(props) {
           type="button"
           className="profile__avatar-img button"
           onClick={props.onEditAvatar}
-          style={{ backgroundImage: `url(${userAvatar})` }}
+          style={{ backgroundImage: `url(${currentUser.avatar})` }}
         ></button>
         <div className="profile__info">
           <div className="profile__info-name-eddit">
-            <h1 className="profile__info-name">{userName}</h1>
+            <h1 className="profile__info-name">{currentUser.name}</h1>
             <button
               type="button"
               className="profile__button-info-eddit button"
@@ -50,7 +59,7 @@ function Main(props) {
               onClick={props.onEditProfile}
             ></button>
           </div>
-          <p className="profile__info-job">{userDescription}</p>
+          <p className="profile__info-job">{currentUser.about}</p>
         </div>
         <button
           type="button"
@@ -61,6 +70,13 @@ function Main(props) {
       </section>
       <section className="elements">
             {cards.map((card) => {
+              const isOwn = card.owner._id === currentUser._id;//? Определяем, являемся ли мы владельцем текущей карточки
+              console.log(isOwn, card)
+              const cardDeleteButtonClassName = ('button'
+                                                 //`button ${isOwn 
+                                                // ? 'element__delete_visible'
+                                                // :'element__delete'  }`
+              ); 
               return (
                 <Card
                   key={card._id}
@@ -69,6 +85,7 @@ function Main(props) {
                   cardCaption={card.name}
                   cardLikesCounter={card.likes.length}
                   onCardClick={props.onCardClick}
+                  cardDelete={cardDeleteButtonClassName}
                 />
               );
             })}
@@ -77,3 +94,6 @@ function Main(props) {
   );
 }
 export default Main;
+
+
+//"element__delete button"
