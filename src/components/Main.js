@@ -72,11 +72,10 @@ function Main(props) {
             {cards.map((card) => {
               const isOwn = card.owner._id === currentUser._id;//? Определяем, являемся ли мы владельцем текущей карточки
               console.log(isOwn, card)
-              const cardDeleteButtonClassName = ('button'
-                                                 //`button ${isOwn 
-                                                // ? 'element__delete_visible'
-                                                // :'element__delete'  }`
-              ); 
+              const cardDeleteButtonClassName = (
+                                                `button ${isOwn 
+                                                 ? 'element__delete element__delete_visible'
+                                                 :'element__delete'}`); 
               return (
                 <Card
                   key={card._id}
