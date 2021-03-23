@@ -16,7 +16,7 @@ import { CardsContext } from "../contexts/CardsContext";
 
 function App() {
   const [currentUser, setCurrentUser] = React.useState({});//задали текущее значение состония переменной currentUser 
-  const [cardsContext, setCardsContext] =React.useState([])//задали текущее значение состония переменной cardsContext 
+  const [cardsContext, setCards] =React.useState([])//задали текущее значение состония переменной cardsContext 
 
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
@@ -46,7 +46,6 @@ function App() {
       nameCard: { nameCard },
     });
   }
-
   function closeAllPopups() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
@@ -63,17 +62,61 @@ function App() {
         console.log(err, "Ошибка при загрузке карточек")
       })   
   },[]);
-  //console.log('###currentUser', currentUser);
-
+  
   useEffect(()=>{
     api.getAllInitialCards()
     .then((dataCards)=>{
-      setCardsContext(dataCards);
+      setCards(dataCards);
       
     })
   },[])
-  console.log("#cardsContext-App", cardsContext)
 
+
+  function handleCardLike(card) {
+    const isLiked = card.likes.some((i) => i._id === currentUser._id); // Снова проверяем, есть ли уже лайк на этой карточке
+
+    if (isLiked) {
+      api
+        .deleteLike(card._id) // Отправляем запрос в API и получаем обновлённые данные карточки
+        .then((newCard) => {
+          setCards((state) => {
+            return state.map((c) => (c._id === card._id ? newCard : c));
+          });
+          console.log("###newCard-delete", newCard);
+        })
+        .catch((err) => {
+          console.log(err, "ошибка из api.deleteLike");
+        });
+    } else {
+      api
+        .putLike(card._id)
+        .then((newCard) => {
+          setCards((state) => {
+            return state.map((c) => (c._id === card._id ? newCard : c));
+          });
+        })
+        .catch((err) => {
+          console.log(err, "ошибка из api.putLike");
+        });
+    }
+  } 
+
+  function handleCardDelete(card) {
+    api.deleteCard(card._id)
+    .then(()=>{
+      setCards((state)=>{ // устанавливаем новый стейт(с удаленной карточкой) при удалении карточки
+        return state=cardsContext.filter((c,index)=>{// в стейт записывется новый массив
+          if (c._id===card._id){//если мой id и id карточки одинаковые, то 
+            cardsContext.splice(index, 1)// то из текущего масиива(в стейте) удаляется один элемент с индексом элемент полученным при сравнение idшников
+          }
+          return cardsContext
+        })
+      }
+         
+      ) 
+      console.log("cardsContext-delete", cardsContext)
+    })
+  }
 
 
 
@@ -91,6 +134,8 @@ function App() {
             onEditProfile={handleEditProfileClick}
             onAddPlace={handleAddPlaceClick}
             onCardClick={handleCardClick}
+            onLikeClick={handleCardLike}
+            onDeleteClick={handleCardDelete}
           />
           <Footer />
         </div>

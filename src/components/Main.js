@@ -5,40 +5,12 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import { CardsContext } from "../contexts/CardsContext";
 
 
+
 function Main(props) {
   const currentUser = React.useContext(CurrentUserContext) //подписали на контекст 
-  console.log("###currentUser-main-avatar", currentUser.avatar);
-
+  //console.log("###currentUser-main-avatar", currentUser.avatar);
   const cards = React.useContext(CardsContext);
-  console.log("#cards", cards)  
-
-
-  // const [userName, setUserName] = React.useState("");
-  // const [userDescription, setUserDescription] = React.useState("");
-  // const [userAvatar, setUserAvatar] = React.useState();
-  //const [cards, setCards] = React.useState([]);
   
-  // useEffect(() => {
-  //   api.getInfoProfile()
-  //     .then((dataUser) => {
-  //       setUserName(dataUser.name);
-  //       setUserDescription(dataUser.about);
-  //       setUserAvatar(dataUser.avatar);
-  //     })
-  //     .catch((err)=>{
-  //       console.log(err, "Ошибка при згрузке информации о профиле")
-  //     })
-  // }, []);
-
-  // useEffect(() => {
-  //   api.getAllInitialCards().then((dataCards) => {
-  //     setCards(dataCards);
-  //   })
-  //   .catch((err)=>{
-  //     console.log(err, "Ошибка при загрузке карточек")
-  //   })
-    
-  // }, []);
 
   return (
     <main className="main">
@@ -70,21 +42,18 @@ function Main(props) {
       </section>
       <section className="elements">
             {cards.map((card) => {
-              const isOwn = card.owner._id === currentUser._id;//? Определяем, являемся ли мы владельцем текущей карточки
-              console.log(isOwn, card)
-              const cardDeleteButtonClassName = (
-                                                `button ${isOwn 
-                                                 ? 'element__delete element__delete_visible'
-                                                 :'element__delete'}`); 
               return (
                 <Card
                   key={card._id}
+                  card={card}
                   cardImg={card.link}
                   cardAlt={card.name}
                   cardCaption={card.name}
                   cardLikesCounter={card.likes.length}
                   onCardClick={props.onCardClick}
-                  cardDelete={cardDeleteButtonClassName}
+                  onCardLike={props.onLikeClick}
+                  onCardDelete={props.onDeleteClick}
+                  
                 />
               );
             })}
