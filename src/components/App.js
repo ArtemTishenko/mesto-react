@@ -10,12 +10,13 @@ import React, { useEffect } from "react";
 //import { Route } from "react-router";
 import { CurrentUserContext } from "../contexts/CurrentUserContext"; //импортировали контекст 
 import { CardsContext } from "../contexts/CardsContext";
+import EditProfilePopup from "./EditProfilePopup";
 
 
 
 
 function App() {
-  const [currentUser, setCurrentUser] = React.useState({});//задали текущее значение состония переменной currentUser 
+  const [currentUser, setCurrentUser] = React.useState({name:'', about:''});//задали текущее значение состония объекту currentUser т.к. при первом монтирование попадается undefined 
   const [cardsContext, setCards] =React.useState([])//задали текущее значение состония переменной cardsContext 
 
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
@@ -59,7 +60,7 @@ function App() {
         setCurrentUser(dataUser);// записали в стейт currentUser принятое значение от сервера  
       })
       .catch((err)=>{
-        console.log(err, "Ошибка при загрузке карточек")
+        console.log(err, "Ошибка при загрузке информации о профиле")
       })   
   },[]);
   
@@ -67,7 +68,9 @@ function App() {
     api.getAllInitialCards()
     .then((dataCards)=>{
       setCards(dataCards);
-      
+    })
+    .catch((err)=>{
+      console.log(err, "Ошибка при загрузке карточек")
     })
   },[])
 
@@ -118,9 +121,15 @@ function App() {
     })
   }
 
-
-
-
+  function handleUpdateUser({name, about}){
+    api
+      .addInfoProfile({name, about})
+      .then((dataUser)=>{
+        setCurrentUser(dataUser);
+        closeAllPopups();
+      })
+      // .catch((err)=>{err, "ошибка handleUpdateUser"})
+  }
   return (
     <>
     <CurrentUserContext.Provider value={currentUser}>
@@ -158,7 +167,15 @@ function App() {
           />
           <span className="popup__field-error" id="popup__field-avatar-link-error"></span>
         </PopupWithForm>
-        <PopupWithForm
+        <EditProfilePopup 
+            isOpen={isEditProfilePopupOpen} 
+            onClose={closeAllPopups}
+            onUpdateUser={handleUpdateUser}
+
+          > 
+
+        </EditProfilePopup>
+        {/* <PopupWithForm
           name="edit-form"
           title="Редактировать профиль"
           isOpen={isEditProfilePopupOpen}
@@ -192,7 +209,7 @@ function App() {
             autoComplete="off"
           />
           <span className="popup__field-error" id="popup__field-eddit-job-error"></span>
-        </PopupWithForm>
+        </PopupWithForm> */}
         <PopupWithForm
           name="card"
           title="Новое место"
