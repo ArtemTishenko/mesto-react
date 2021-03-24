@@ -11,6 +11,7 @@ import React, { useEffect } from "react";
 import { CurrentUserContext } from "../contexts/CurrentUserContext"; //импортировали контекст 
 import { CardsContext } from "../contexts/CardsContext";
 import EditProfilePopup from "./EditProfilePopup";
+import EditAvatarPopup from "./EditAvatarPopup";
 
 
 
@@ -54,7 +55,7 @@ function App() {
     setSelectedCard({ isOpen: false, linkCard: {}, nameCard: {} });
   }
    // подняли стейт для того то бы можно было использовать в других компонентх, а не только main
-  useEffect(()=>{ // используем useEffект 
+  useEffect(()=>{ 
     api.getInfoProfile()
       .then((dataUser)=>{
         setCurrentUser(dataUser);// записали в стейт currentUser принятое значение от сервера  
@@ -128,7 +129,22 @@ function App() {
         setCurrentUser(dataUser);
         closeAllPopups();
       })
-      // .catch((err)=>{err, "ошибка handleUpdateUser"})
+      .catch((err)=>{
+        console.log(err, "Ошибка при отправке данных пользователя")
+      })
+  }
+
+  function handleUpdateAvatar(data){
+    
+    api
+      .addInfoProfileAvatar(data)
+      .then((dataUser)=>{
+        setCurrentUser(dataUser);
+        closeAllPopups();
+      })
+      .catch((err)=>{
+        console.log(err, "Ошибка при отправке аватара")
+      })
   }
   return (
     <>
@@ -148,7 +164,7 @@ function App() {
           />
           <Footer />
         </div>
-        <PopupWithForm
+        {/* <PopupWithForm
           name="avatar"
           title="Обновить Аватар"
           isOpen={isEditAvatarPopupOpen}
@@ -166,50 +182,13 @@ function App() {
             autoComplete="on"
           />
           <span className="popup__field-error" id="popup__field-avatar-link-error"></span>
-        </PopupWithForm>
+        </PopupWithForm> */}
         <EditProfilePopup 
             isOpen={isEditProfilePopupOpen} 
             onClose={closeAllPopups}
             onUpdateUser={handleUpdateUser}
 
-          > 
-
-        </EditProfilePopup>
-        {/* <PopupWithForm
-          name="edit-form"
-          title="Редактировать профиль"
-          isOpen={isEditProfilePopupOpen}
-          onClose={closeAllPopups}
-        >
-          <input
-            className="popup__field popup__field_type_name "
-            id="popup__field-eddit-name"
-            type="text"
-            placeholder="Имя"
-            aria-label="Имя"
-            name="name"
-            required
-            minLength="3"
-            maxLength="40"
-            noValidate
-            autoComplete="off"
-          />
-          <span className="popup__field-error" id="popup__field-eddit-name-error"></span>
-          <input
-            className="popup__field popup__field_type_job"
-            id="popup__field-eddit-job"
-            type="text"
-            placeholder="Профессия"
-            aria-label="О себе"
-            name="about"
-            required
-            minLength="2"
-            maxLength="200"
-            noValidate
-            autoComplete="off"
-          />
-          <span className="popup__field-error" id="popup__field-eddit-job-error"></span>
-        </PopupWithForm> */}
+          /> 
         <PopupWithForm
           name="card"
           title="Новое место"
@@ -243,7 +222,13 @@ function App() {
           />
           <span className="popup__field-error" id="popup__field-card-link-error"></span>
         </PopupWithForm>
-        <PopupWithForm name="card-delete" title="Вы уверены?" />
+        <EditAvatarPopup 
+            isOpen={isEditAvatarPopupOpen} 
+            onClose={closeAllPopups}
+            onUpdateAvatar={handleUpdateAvatar}
+        />
+        {/* <PopupWithForm name="card-delete" title="Вы уверены?" /> */}
+
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />
         </div>
         {/* // </Route> */}
