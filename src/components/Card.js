@@ -29,7 +29,7 @@ function Card({
   function handleClick() {
     onCardClick(cardImg, cardCaption);
   }
-  function handleLikeClick() {//вызываемая функция при окрытие клике по лайку
+  function handleLikeClick() {//вызываемая функция при  клике по лайку
     onCardLike(card);
   }
   function handleDeleteClick(){

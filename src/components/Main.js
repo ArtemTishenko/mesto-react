@@ -2,15 +2,15 @@
 import Card from "../components/Card";
 import React from "react";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
-import { CardsContext } from "../contexts/CardsContext";
+//import { CardsContext } from "../contexts/CardsContext";
 
 
 
 function Main(props) {
   const currentUser = React.useContext(CurrentUserContext) //подписали на контекст 
   //console.log("###currentUser-main-avatar", currentUser.avatar);
-  const cards = React.useContext(CardsContext);
-  
+  //const cards = React.useContext(CardsContext);
+  // const cards = props.cards; 
 
   return (
     <main className="main">
@@ -41,7 +41,7 @@ function Main(props) {
         ></button>
       </section>
       <section className="elements">
-            {cards.map((card) => {
+            {props.cards.map((card) => {
               return (
                 <Card
                   key={card._id}
@@ -51,8 +51,8 @@ function Main(props) {
                   cardCaption={card.name}
                   cardLikesCounter={card.likes.length}
                   onCardClick={props.onCardClick}
-                  onCardLike={props.onLikeClick}
-                  onCardDelete={props.onDeleteClick}
+                  onCardLike={props.onCardLike}
+                  onCardDelete={props.onCardDelete}
                   
                 />
               );
