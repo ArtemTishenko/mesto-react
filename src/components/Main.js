@@ -1,16 +1,9 @@
-//import api from "../utils/api";
 import Card from "../components/Card";
 import React from "react";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
-//import { CardsContext } from "../contexts/CardsContext";
-
-
 
 function Main(props) {
-  const currentUser = React.useContext(CurrentUserContext) //подписали на контекст 
-  //console.log("###currentUser-main-avatar", currentUser.avatar);
-  //const cards = React.useContext(CardsContext);
-  // const cards = props.cards; 
+  const currentUser = React.useContext(CurrentUserContext); //подписали на контекст
 
   return (
     <main className="main">
@@ -41,27 +34,23 @@ function Main(props) {
         ></button>
       </section>
       <section className="elements">
-            {props.cards.map((card) => {
-              return (
-                <Card
-                  key={card._id}
-                  card={card}
-                  cardImg={card.link}
-                  cardAlt={card.name}
-                  cardCaption={card.name}
-                  cardLikesCounter={card.likes.length}
-                  onCardClick={props.onCardClick}
-                  onCardLike={props.onCardLike}
-                  onCardDelete={props.onCardDelete}
-                  
-                />
-              );
-            })}
-          </section>
+        {props.cards.map((card) => {
+          return (
+            <Card
+              key={card._id}
+              card={card}
+              cardImg={card.link}
+              cardAlt={card.name}
+              cardCaption={card.name}
+              cardLikesCounter={card.likes.length}
+              onCardClick={props.onCardClick}
+              onCardLike={props.onCardLike}
+              onCardDelete={props.onCardDelete}
+            />
+          );
+        })}
+      </section>
     </main>
   );
 }
 export default Main;
-
-
-//"element__delete button"
