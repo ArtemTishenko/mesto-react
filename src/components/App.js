@@ -3,7 +3,7 @@ import "../index.css";
 import Header from "../components/Header";
 import Main from "../components/Main";
 import Footer from "../components/Footer";
-import PopupWithForm from "../components/PopupWithForm";
+//import PopupWithForm from "../components/PopupWithForm";
 import ImagePopup from "../components/ImagePopup";
 import api from "../utils/api";
 import React, { useEffect } from "react";
@@ -58,6 +58,39 @@ function App() {
     setIsAddPlacePopupOpen(false);
     setSelectedCard({ isOpen: false, linkCard: {}, nameCard: {} });
   }
+  useEffect(()=>{  //получение данных пользователя
+    api.getInfoProfile()
+      .then((dataUser)=>{
+        setCurrentUser(dataUser);// записали в стейт currentUser принятое значение от сервера  
+      })
+      .catch((err)=>{
+        console.log(err, "Ошибка при загрузке информации о профиле")
+      })   
+  },[]);
+
+  function handleUpdateUser({name, about}){
+    api
+      .addInfoProfile({name, about})
+      .then((dataUser)=>{
+        setCurrentUser(dataUser);
+        closeAllPopups();
+      })
+      .catch((err)=>{
+        console.log(err, "Ошибка при отправке данных пользователя")
+      })
+  }
+  function handleUpdateAvatar(data){
+    api
+      .addInfoProfileAvatar(data)
+      .then((dataUser)=>{
+        setCurrentUser(dataUser);
+        closeAllPopups();
+      })
+      .catch((err)=>{
+        console.log(err, "Ошибка при отправке аватара")
+      })
+  }
+
   function handleCardLike(card) {
     const isLiked = card.likes.some((i) => i._id === currentUser._id); // Снова проверяем, есть ли уже лайк на этой карточке
 
@@ -86,7 +119,6 @@ function App() {
         });
     }
   } 
-
   function handleCardDelete(card) {
     api.deleteCard(card._id)
     .then(()=>{
@@ -103,17 +135,7 @@ function App() {
       console.log("cardsContext-delete", cardsContext)
     })
   }
-
-  useEffect(()=>{ 
-    api.getInfoProfile()
-      .then((dataUser)=>{
-        setCurrentUser(dataUser);// записали в стейт currentUser принятое значение от сервера  
-      })
-      .catch((err)=>{
-        console.log(err, "Ошибка при загрузке информации о профиле")
-      })   
-  },[]);
-    
+ 
   useEffect(()=>{// получение карточек
     api.getAllInitialCards()
       .then((dataCards)=>{
@@ -124,31 +146,10 @@ function App() {
       })
   },[])
 
-  function handleUpdateUser({name, about}){
-    api
-      .addInfoProfile({name, about})
-      .then((dataUser)=>{
-        setCurrentUser(dataUser);
-        closeAllPopups();
-      })
-      .catch((err)=>{
-        console.log(err, "Ошибка при отправке данных пользователя")
-      })
-  }
 
-  function handleUpdateAvatar(data){
-    api
-      .addInfoProfileAvatar(data)
-      .then((dataUser)=>{
-        setCurrentUser(dataUser);
-        closeAllPopups();
-      })
-      .catch((err)=>{
-        console.log(err, "Ошибка при отправке аватара")
-      })
-  }
   
   function handleAddPlaceSubmit(data){
+    console.log("вызвалась функция handleAddPlaceSubmit из App")
     api.addCard(data)
       .then((newCard)=>{
         setCards([newCard, ...cardsContext]);  
@@ -163,7 +164,7 @@ function App() {
     <>
     <CurrentUserContext.Provider value={currentUser}>
       <CardsContext.Provider value={cardsContext}>
-        {/* // <Route exact path='/'> */}
+        
         <div className="root">
         <div className="container">
           <Header />
@@ -188,7 +189,7 @@ function App() {
         <AddPlacePopup 
           isOpen={isAddPlacePopupOpen}
           onClose={closeAllPopups}
-          onAddCard={handleAddPlaceSubmit}
+          onAddPlace={handleAddPlaceSubmit}
         />
         
         <EditAvatarPopup 

@@ -1,18 +1,31 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { CardsContext } from "../contexts/CardsContext";
 import PopupWithForm from "./PopupWithForm";
 
 
 function AddPlacePopup(props){
-  const [name, setName]= React.useState('')
-  const [link, setLink] = React.useState('')
+  const [cardName, setCardName]= React.useState('')
+  const [cardLink, setCardLink] = React.useState('')
   const cards = React.useContext(CardsContext)
-  function onAddPlace(){
 
+  useEffect(()=>{
+    setCardName(cards.name);
+    setCardLink(cards.link);
+  },[cards])
+  function handleChangeName(e){
+    setCardName(e.target.value)
+  }
+  function handleChangeLink(e){
+    setCardLink(e.target.value)
   }
 
   function handleSubmit(e){
     e.preventDefault();
+    props.onAddPlace({
+      name:cardName,
+      link:cardLink
+    })
+    console.log("вызвалась функция handleSubmit из AddPlacePopup")
   }
   
   return(
@@ -21,7 +34,7 @@ function AddPlacePopup(props){
           title="Новое место"
           isOpen={props.isOpen}
           onClose={props.onClose}
-
+          onSubmit={handleSubmit}
         >
           <input
             className="popup__field popup__field_type_card-name"
@@ -35,6 +48,7 @@ function AddPlacePopup(props){
             maxLength="30"
             noValidate
             autoComplete="off"
+            onChange={handleChangeName}
           />
           <span className="popup__field-error" id="popup__field-card-name-error"></span>
           <input
@@ -47,6 +61,7 @@ function AddPlacePopup(props){
             required
             noValidate
             autoComplete="on"
+            onChange={handleChangeLink}
           />
           <span className="popup__field-error" id="popup__field-card-link-error"></span>
         </PopupWithForm>
