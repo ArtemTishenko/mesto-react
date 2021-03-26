@@ -132,7 +132,6 @@ function App() {
           return cardsContext;
         }));
       });
-
     });
   }
 
