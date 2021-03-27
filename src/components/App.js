@@ -9,7 +9,7 @@ import api from "../utils/api";
 import React, { useEffect } from "react";
 
 import { CurrentUserContext } from "../contexts/CurrentUserContext"; //импортировали контекст
-import { CardsContext } from "../contexts/CardsContext";
+
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
@@ -56,8 +56,8 @@ function App() {
     setIsAddPlacePopupOpen(false);
     setSelectedCard({ isOpen: false, linkCard: {}, nameCard: {} });
   }
-  useEffect(() => {
-    //получение данных пользователя
+  useEffect(() => { //получение данных пользователя
+   
     api
       .getInfoProfile()
       .then((dataUser) => {
@@ -101,7 +101,7 @@ function App() {
           setCards((state) => {
             return state.map((c) => (c._id === card._id ? newCard : c));
           });
-          console.log("###newCard-delete", newCard);
+        
         })
         .catch((err) => {
           console.log(err, "ошибка из api.deleteLike");
@@ -120,23 +120,16 @@ function App() {
     }
   }
   function handleCardDelete(card) {
-    api.deleteCard(card._id).then(() => {
-      setCards((state) => {
-        // устанавливаем новый стейт(с удаленной карточкой) при удалении карточки
-        return (state = cardsContext.filter((c, index) => {
-          // в стейт записывется новый массив
-          if (c._id === card._id) {
-            //если мой id и id карточки одинаковые, то
-            cardsContext.splice(index, 1); // то из текущего масиива(в стейте) удаляется один элемент с индексом элемент полученным при сравнение idшников
-          }
-          return cardsContext;
-        }));
-      });
+    api.deleteCard(card._id)
+    .then(() => {
+      setCards(cardsContext.filter(c=>c._id !== card._id))})
+    .catch((err) => {
+      console.log(err, "Ошибка при удалении карточки");
     });
   }
 
-  useEffect(() => {
-    // получение карточек
+  useEffect(() => {// получение карточек
+    
     api
       .getAllInitialCards()
       .then((dataCards) => {
@@ -162,7 +155,6 @@ function App() {
   return (
     <>
       <CurrentUserContext.Provider value={currentUser}>
-        <CardsContext.Provider value={cardsContext}>
           <div className="root">
             <div className="container">
               <Header />
@@ -197,7 +189,6 @@ function App() {
             />
             <ImagePopup card={selectedCard} onClose={closeAllPopups} />
           </div>
-        </CardsContext.Provider>
       </CurrentUserContext.Provider>
     </>
   );

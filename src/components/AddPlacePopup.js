@@ -1,16 +1,12 @@
-import React, { useEffect } from "react";
-import { CardsContext } from "../contexts/CardsContext";
+import React from "react";
+
 import PopupWithForm from "./PopupWithForm";
 
 function AddPlacePopup(props) {
-  const [cardName, setCardName] = React.useState("");
-  const [cardLink, setCardLink] = React.useState("");
-  const cards = React.useContext(CardsContext);
+  const [cardName, setCardName] = React.useState('');
+  const [cardLink, setCardLink] = React.useState('');
+;
 
-  useEffect(() => {
-    setCardName(cards.name);
-    setCardLink(cards.link);
-  }, [cards]);
   function handleChangeName(e) {
     setCardName(e.target.value);
   }
@@ -24,6 +20,8 @@ function AddPlacePopup(props) {
       name: cardName,
       link: cardLink,
     });
+     setCardName('');
+     setCardLink('');
   }
 
   return (
@@ -46,6 +44,7 @@ function AddPlacePopup(props) {
         maxLength="30"
         noValidate
         autoComplete="off"
+         value={"" || cardName}
         onChange={handleChangeName}
       />
       <span
@@ -62,6 +61,7 @@ function AddPlacePopup(props) {
         required
         noValidate
         autoComplete="on"
+        value={"" || cardLink}
         onChange={handleChangeLink}
       />
       <span
