@@ -1,4 +1,5 @@
 # Проект 5: Место-React
+https://artemtishenko.github.io/mesto-react/
 
 ### Описание проекта и функциональность
 
@@ -13,11 +14,7 @@
 * Закрытие кликом по overlay
 
 ### Используемые технологии
-* HTML
-* CSS
-* Javascript
-* Адаптивная верстка
-* ООП
 * webpack
 * api
 * React
+* React router
